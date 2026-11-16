@@ -1,0 +1,25 @@
+# === Données sensibles / confidentielles — NE JAMAIS committer ===
+# Fichier Excel brut : contient des mots de passe fournisseurs/clients en clair
+data/*.xlsx
+data/*.xls
+# Plans clients (propriété des clients)
+*.pdf
+clients/
+# Fichiers générés
+sorties/
+*.dxf
+*.step
+*.stp
+
+# === Python ===
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+
+# === OS / éditeurs ===
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

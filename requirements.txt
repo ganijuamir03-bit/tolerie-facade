@@ -1,0 +1,8 @@
+# Lecture de la table Excel
+openpyxl>=3.1
+# Lecture des PDF vectoriels (cartouche + géométrie)
+pymupdf>=1.24
+# Génération DXF
+ezdxf>=1.3
+# Génération STEP 3D (extrusion de profil) — brique 4
+# build123d>=0.6   # (à activer quand on attaque le STEP)

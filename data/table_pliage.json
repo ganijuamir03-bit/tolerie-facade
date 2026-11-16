@@ -1,0 +1,437 @@
+{
+  "source": "data/aide_pour_dessinateur.xlsx",
+  "groupes": {
+    "Acier 37 / S235JRG2 / DC01 / DD11 / DD12": {
+      "nom": "Acier 37 / S235JRG2 / DC01 / DD11 / DD12",
+      "valeurs": {
+        "1.0": {
+          "M6": {
+            "k": 0.34,
+            "deduction": 1.9
+          },
+          "M8": {
+            "k": 0.27,
+            "deduction": 2.0
+          },
+          "M10": {
+            "k": null,
+            "deduction": 2.05
+          },
+          "M12": {
+            "k": null,
+            "deduction": 2.25
+          }
+        },
+        "1.25": {
+          "M8": {
+            "k": 0.4,
+            "deduction": 2.25
+          },
+          "M10": {
+            "k": 0.325,
+            "deduction": 2.4
+          }
+        },
+        "1.5": {
+          "M6": {
+            "k": 0.57,
+            "deduction": 2.3
+          },
+          "M8": {
+            "k": 0.51,
+            "deduction": 2.45
+          },
+          "M10": {
+            "k": 0.44,
+            "deduction": 2.6
+          },
+          "M12": {
+            "k": 0.4,
+            "deduction": 2.7
+          },
+          "M16": {
+            "k": 0.23,
+            "deduction": 3.1
+          }
+        },
+        "2.0": {
+          "M8": {
+            "k": 0.59,
+            "deduction": 3.0
+          },
+          "M10": {
+            "k": 0.53,
+            "deduction": 3.2
+          },
+          "M12": {
+            "k": 0.46,
+            "deduction": 3.4
+          },
+          "M16": {
+            "k": 0.34,
+            "deduction": 3.8
+          },
+          "M24": {
+            "k": 0.005,
+            "deduction": 4.85
+          }
+        },
+        "2.5": {
+          "M10": {
+            "k": 0.59,
+            "deduction": 3.75
+          },
+          "M12": {
+            "k": 0.55,
+            "deduction": 3.9
+          },
+          "M16": {
+            "k": 0.45,
+            "deduction": 4.3
+          },
+          "M24": {
+            "k": 0.25,
+            "deduction": 5.1
+          }
+        },
+        "3.0": {
+          "M12": {
+            "k": 0.55,
+            "deduction": 4.7
+          },
+          "M16": {
+            "k": 0.5,
+            "deduction": 5.0
+          },
+          "M24": {
+            "k": 0.38,
+            "deduction": 5.5
+          }
+        },
+        "4.0": {
+          "M16": {
+            "k": 0.51,
+            "deduction": 6.5
+          },
+          "M20": {
+            "k": 0.53,
+            "deduction": 6.4
+          },
+          "M24": {
+            "k": 0.48,
+            "deduction": 6.7
+          }
+        },
+        "5.0": {
+          "M20": {
+            "k": 0.53,
+            "deduction": 8.0
+          },
+          "M24": {
+            "k": null,
+            "deduction": 8.3
+          }
+        }
+      }
+    },
+    "Acier S235 (CLIENT : APCO)": {
+      "nom": "Acier S235 (CLIENT : APCO)",
+      "valeurs": {
+        "4.0": {
+          "M16": {
+            "k": 0.435,
+            "deduction": 6.7
+          },
+          "M24": {
+            "k": 0.45,
+            "deduction": 7.0
+          }
+        }
+      }
+    },
+    "Aluminium PE100 / PE101 (EN-AW-5005) avec et sans vinyl + Alu pré-éloxé 20um !": {
+      "nom": "Aluminium PE100 / PE101 (EN-AW-5005) avec et sans vinyl + Alu pré-éloxé 20um !",
+      "valeurs": {
+        "1.0": {
+          "M6": {
+            "k": 0.46,
+            "deduction": 1.7
+          },
+          "M8": {
+            "k": 0.4,
+            "deduction": 1.8
+          }
+        },
+        "1.25": {
+          "M8": {
+            "k": 0.515,
+            "deduction": 2.0
+          }
+        },
+        "1.5": {
+          "M6": {
+            "k": 0.53,
+            "deduction": 2.4
+          },
+          "M8": {
+            "k": 0.46,
+            "deduction": 2.55
+          },
+          "M10": {
+            "k": 0.46,
+            "deduction": 2.55
+          }
+        },
+        "2.0": {
+          "M8": {
+            "k": 0.51,
+            "deduction": 3.25
+          },
+          "M10": {
+            "k": 0.51,
+            "deduction": 3.25
+          },
+          "M12": {
+            "k": 0.5,
+            "deduction": 3.3
+          },
+          "M16": {
+            "k": 0.46,
+            "deduction": 3.4
+          }
+        },
+        "2.5": {
+          "M10": {
+            "k": 0.42,
+            "deduction": 4.45
+          },
+          "M12": {
+            "k": 0.39,
+            "deduction": 4.55
+          },
+          "M16": {
+            "k": 0.56,
+            "deduction": 3.9
+          },
+          "M24": {
+            "k": null,
+            "deduction": 4.8
+          }
+        },
+        "3.0": {
+          "M12": {
+            "k": 0.56,
+            "deduction": 4.65
+          },
+          "M16": {
+            "k": 0.53,
+            "deduction": 4.8
+          },
+          "M24": {
+            "k": 0.49,
+            "deduction": 5.0
+          }
+        },
+        "4.0": {
+          "M16": {
+            "k": 0.51,
+            "deduction": 6.5
+          },
+          "M24": {
+            "k": 0.49,
+            "deduction": 6.65
+          }
+        },
+        "5.0": {
+          "M20": {
+            "k": 0.617,
+            "deduction": 7.3
+          },
+          "M24": {
+            "k": 0.51,
+            "deduction": 8.14
+          }
+        }
+      }
+    },
+    "Aluminium pré-éloxé 10um avec vinyl uniquement !": {
+      "nom": "Aluminium pré-éloxé 10um avec vinyl uniquement !",
+      "valeurs": {
+        "2.0": {
+          "M16": {
+            "k": 0.575,
+            "deduction": 3.05
+          }
+        },
+        "2.5": {
+          "M16": {
+            "k": 0.53,
+            "deduction": 4.0
+          }
+        },
+        "3.0": {
+          "M24": {
+            "k": 0.56,
+            "deduction": 4.65
+          }
+        }
+      }
+    },
+    "Inox 1.4301 et 1.4404 (valable pour 2B, 2B+vinyl, brossé, ect…)": {
+      "nom": "Inox 1.4301 et 1.4404 (valable pour 2B, 2B+vinyl, brossé, ect…)",
+      "valeurs": {
+        "0.5": {
+          "M6": {
+            "k": 0.4,
+            "deduction": 0.9
+          }
+        },
+        "0.8": {
+          "M8": {
+            "k": 0.0005,
+            "deduction": 1.95
+          },
+          "M10": {
+            "k": 0.001,
+            "deduction": 2.0
+          }
+        },
+        "1.0": {
+          "M6": {
+            "k": 0.4,
+            "deduction": 1.8
+          },
+          "M8": {
+            "k": 0.21,
+            "deduction": 2.1
+          },
+          "M10": {
+            "k": 0.11,
+            "deduction": 2.25
+          }
+        },
+        "1.25": {
+          "M8": {
+            "k": 0.4,
+            "deduction": 2.25
+          },
+          "M10": {
+            "k": 0.2,
+            "deduction": 2.65
+          }
+        },
+        "1.5": {
+          "M6": {
+            "k": 0.44,
+            "deduction": 2.6
+          },
+          "M8": {
+            "k": 0.4,
+            "deduction": 2.7
+          },
+          "M10": {
+            "k": 0.31,
+            "deduction": 2.9
+          },
+          "M12": {
+            "k": null,
+            "deduction": 3.05
+          },
+          "M16": {
+            "k": 0.01,
+            "deduction": 3.55
+          }
+        },
+        "2.0": {
+          "M8": {
+            "k": 0.46,
+            "deduction": 3.4
+          },
+          "M10": {
+            "k": 0.41,
+            "deduction": 3.55
+          },
+          "M12": {
+            "k": 0.37,
+            "deduction": 3.7
+          },
+          "M16": {
+            "k": 0.24,
+            "deduction": 4.1
+          },
+          "M24": {
+            "k": 0.1,
+            "deduction": 5.0
+          }
+        },
+        "2.5": {
+          "M8": {
+            "k": 0.605,
+            "deduction": 3.7
+          },
+          "M10": {
+            "k": 0.49,
+            "deduction": 4.15
+          },
+          "M12": {
+            "k": 0.45,
+            "deduction": 4.3
+          },
+          "M16": {
+            "k": 0.4,
+            "deduction": 4.5
+          },
+          "M24": {
+            "k": 0.16,
+            "deduction": 5.45
+          }
+        },
+        "3.0": {
+          "M12": {
+            "k": 0.53,
+            "deduction": 4.8
+          },
+          "M16": {
+            "k": 0.38,
+            "deduction": 5.5
+          },
+          "M24": {
+            "k": 0.23,
+            "deduction": 6.2
+          }
+        },
+        "4.0": {
+          "M16": {
+            "k": 0.48,
+            "deduction": 6.7
+          },
+          "M20": {
+            "k": 0.46,
+            "deduction": 6.75
+          },
+          "M24": {
+            "k": 0.35,
+            "deduction": 7.5
+          }
+        },
+        "5.0": {
+          "M20": {
+            "k": 0.51,
+            "deduction": 8.1
+          }
+        }
+      }
+    },
+    "Cuivre": {
+      "nom": "Cuivre",
+      "valeurs": {
+        "0.5": {
+          "M6": {
+            "k": 0.5,
+            "deduction": 0.83
+          }
+        }
+      }
+    }
+  }
+}
