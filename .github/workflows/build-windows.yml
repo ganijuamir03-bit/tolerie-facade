@@ -1,0 +1,61 @@
+name: Build Windows app
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Installer les dépendances
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - name: Compiler l'exécutable
+        run: >
+          pyinstaller --noconfirm --name TolerieFacade
+          --add-data "app/templates;app/templates"
+          --add-data "data/table_pliage.json;data"
+          --collect-all OCP
+          --collect-all build123d
+          --collect-data ezdxf
+          --collect-submodules ezdxf
+          --collect-data pymupdf
+          --collect-submodules matplotlib
+          --collect-data matplotlib
+          lanceur.py
+
+      - name: Préparer le dossier data éditable
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force dist/TolerieFacade/data | Out-Null
+          Set-Content dist/TolerieFacade/data/_DEPOSEZ_ICI_votre_aide_pour_dessinateur.xlsx.txt "Placez votre fichier aide_pour_dessinateur.xlsx dans ce dossier pour utiliser la table de pliage à jour. Sinon l'application utilise une copie figée."
+
+      - name: Zipper
+        shell: pwsh
+        run: Compress-Archive -Path dist/TolerieFacade -DestinationPath TolerieFacade-windows.zip -Force
+
+      - name: Publier l'artefact (téléchargeable depuis l'onglet Actions)
+        uses: actions/upload-artifact@v4
+        with:
+          name: TolerieFacade-windows
+          path: TolerieFacade-windows.zip
+
+      - name: Créer la Release (si lancé par un tag)
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: TolerieFacade-windows.zip

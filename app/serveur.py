@@ -10,6 +10,7 @@ from __future__ import annotations
 import os
 import re
 import secrets
+import sys
 import tempfile
 
 from flask import (Flask, render_template, request, jsonify,
@@ -20,13 +21,43 @@ from moteur.profil import Profil
 from moteur.generation import generer, construire_profil
 from moteur.lecture_pdf import lire_cartouche
 
-RACINE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DATA = os.path.join(RACINE, "data")
-SORTIES = os.path.join(RACINE, "sorties", "web")
+
+def _base_dir() -> str:
+    """Dossier des ressources embarquées (= _MEIPASS une fois empaqueté en .exe)."""
+    if getattr(sys, "frozen", False):
+        return sys._MEIPASS  # type: ignore[attr-defined]
+    return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
+def _app_dir() -> str:
+    """Dossier de l'application (à côté de l'exe) : données éditables + sorties."""
+    if getattr(sys, "frozen", False):
+        return os.path.dirname(sys.executable)
+    return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
+BASE = _base_dir()
+APPDIR = _app_dir()
+TEMPLATES = os.path.join(BASE, "app", "templates")
+SORTIES = os.path.join(APPDIR, "sorties", "web")
 os.makedirs(SORTIES, exist_ok=True)
 
-app = Flask(__name__)
-TABLE = TablePliage.charger(DATA)
+app = Flask(__name__, template_folder=TEMPLATES)
+
+
+def _charger_table() -> TablePliage:
+    # priorité au dossier data/ à côté de l'exe (où l'atelier dépose son .xlsx),
+    # sinon la table figée embarquée.
+    for d in (os.path.join(APPDIR, "data"), os.path.join(BASE, "data")):
+        if os.path.isdir(d):
+            try:
+                return TablePliage.charger(d)
+            except Exception:
+                continue
+    raise FileNotFoundError("Table de pliage introuvable (ni .xlsx ni table_pliage.json).")
+
+
+TABLE = _charger_table()
 
 
 # ----------------------------------------------------------------- pages

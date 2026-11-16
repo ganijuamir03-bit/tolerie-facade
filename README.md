@@ -19,7 +19,15 @@ app/           application web locale (Flask) — forme A
 data/          table de pliage (JSON). L'Excel brut N'EST PAS versionné.
 ```
 
-## Installation (PC d'atelier, Windows)
+## Application autonome Windows (sans rien installer)
+
+Une version `.exe` prête à l'emploi est compilée automatiquement et publiée dans
+la page **Releases** du dépôt. Télécharger `TolerieFacade-windows.zip`, décompresser,
+puis double-cliquer **`TolerieFacade.exe`** — rien d'autre à installer.
+Pour la table de pliage à jour, déposer `aide_pour_dessinateur.xlsx` dans le dossier `data`
+à côté de l'exe.
+
+## Installation par le code (développement, ou si pas d'exe)
 
 Le plus simple :
 1. Installer **Python** depuis https://www.python.org/downloads/ (cocher *Add Python to PATH*).
