@@ -30,8 +30,8 @@ Ces fichiers sont exclus par `.gitignore`. Le dépôt doit rester **privé**.
 ## Avancement
 
 - [x] 1. Moteur de pliage (lecture table + déduction + dépliage) — testé
-- [ ] 2. Lecture PDF (cartouche + profil de coupe)
-- [ ] 3. Générateur DXF (contour + plis + trous + découpes)
-- [ ] 4. Générateur STEP (extrusion du profil plié)
+- [x] 3. Générateur DXF (contour + plis + trous + découpes) — testé
+- [x] 4. Générateur STEP (extrusion du profil plié, rayons de pli) — testé
+- [~] 2. Lecture PDF (cartouche OK ; géométrie de coupe + perçages à faire)
 - [ ] 5. Application à formulaire (glisser PDF → vérifier → générer)
 - [ ] 6. Pont SolidWorks (optionnel, sur PC Windows)
