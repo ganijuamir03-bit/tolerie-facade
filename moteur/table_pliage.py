@@ -170,6 +170,25 @@ class TablePliage:
             raise ValueError("Facteur K non renseigné dans la table.")
         return c["k"]
 
+    def matrices_disponibles(self, matiere: str, epaisseur: float) -> list[dict]:
+        """Matrices ayant une déduction renseignée pour cette matière/épaisseur."""
+        nom = self.chercher_matiere(matiere)
+        if nom is None or epaisseur not in self.groupes[nom].valeurs:
+            return []
+        cases = self.groupes[nom].valeurs[epaisseur]
+        res = []
+        for fam, c in cases.items():
+            if c.get("deduction") is not None:
+                res.append({"matrice": fam, "deduction": c["deduction"], "k": c["k"]})
+        # ordre par taille de matrice (M6 < M8 < ... < M24)
+        res.sort(key=lambda d: int(re.sub(r"\D", "", d["matrice"]) or 0))
+        return res
+
+    def matrice_par_defaut(self, matiere: str, epaisseur: float) -> str | None:
+        """Choix par défaut : la plus petite matrice valide (modifiable par l'opérateur)."""
+        dispo = self.matrices_disponibles(matiere, epaisseur)
+        return dispo[0]["matrice"] if dispo else None
+
     def exporter_json(self, chemin: str):
         data = {nom: asdict(g) for nom, g in self.groupes.items()}
         with open(chemin, "w", encoding="utf-8") as f:
