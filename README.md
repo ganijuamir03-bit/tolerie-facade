@@ -19,15 +19,19 @@ app/           application web locale (Flask) — forme A
 data/          table de pliage (JSON). L'Excel brut N'EST PAS versionné.
 ```
 
-## Installation (PC d'atelier)
+## Installation (PC d'atelier, Windows)
+
+Le plus simple :
+1. Installer **Python** depuis https://www.python.org/downloads/ (cocher *Add Python to PATH*).
+2. Sur la page GitHub du projet : bouton vert **Code → Download ZIP**, puis décompresser.
+3. Déposer le fichier maison **`aide_pour_dessinateur.xlsx`** dans le dossier **`data/`**.
+4. **Double-cliquer sur `demarrer_windows.bat`** → le navigateur s'ouvre sur l'appli.
+
+En ligne de commande (équivalent) :
 
 ```bash
-git clone https://github.com/ganijuamir03-bit/tolerie-facade.git
-cd tolerie-facade
 pip install -r requirements.txt
-# déposer le fichier maison aide_pour_dessinateur.xlsx dans data/ (non versionné)
 python -m app.serveur
-# puis ouvrir http://127.0.0.1:5000
 ```
 
 Sans l'Excel dans `data/`, l'appli utilise la table figée `data/table_pliage.json`.
