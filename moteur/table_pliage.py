@@ -10,6 +10,7 @@ Les matrices sont normalisées en familles : M6, M8, M10, M12, M16, M20, M24.
 """
 from __future__ import annotations
 import json
+import os
 import re
 import unicodedata
 from dataclasses import dataclass, field, asdict
@@ -194,6 +195,30 @@ class TablePliage:
         with open(chemin, "w", encoding="utf-8") as f:
             json.dump({"source": self.source, "groupes": data}, f,
                       ensure_ascii=False, indent=2)
+
+    @classmethod
+    def depuis_json(cls, chemin: str) -> "TablePliage":
+        with open(chemin, encoding="utf-8") as f:
+            data = json.load(f)
+        groupes = {}
+        for nom, g in data["groupes"].items():
+            # les clés d'épaisseur redeviennent des float
+            vals = {float(ep): cases for ep, cases in g["valeurs"].items()}
+            groupes[nom] = GroupeMatiere(nom=g["nom"], valeurs=vals)
+        return cls(groupes, source=data.get("source", chemin))
+
+    @classmethod
+    def charger(cls, dossier_data: str) -> "TablePliage":
+        """Charge l'Excel maison s'il est présent (à jour), sinon le JSON versionné."""
+        import glob
+        xlsx = glob.glob(os.path.join(dossier_data, "*.xlsx"))
+        if xlsx:
+            return cls.depuis_excel(xlsx[0])
+        js = os.path.join(dossier_data, "table_pliage.json")
+        if os.path.exists(js):
+            return cls.depuis_json(js)
+        raise FileNotFoundError(
+            f"Aucune table trouvée dans {dossier_data} (ni .xlsx ni table_pliage.json).")
 
 
 if __name__ == "__main__":

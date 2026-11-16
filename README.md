@@ -14,9 +14,23 @@ extraite en `data/table_pliage.json`.
 ## Structure
 
 ```
-moteur/        logique métier (table de pliage, dépliage, DXF, STEP)
+moteur/        logique métier (table de pliage, dépliage, DXF, STEP, génération)
+app/           application web locale (Flask) — forme A
 data/          table de pliage (JSON). L'Excel brut N'EST PAS versionné.
 ```
+
+## Installation (PC d'atelier)
+
+```bash
+git clone https://github.com/ganijuamir03-bit/tolerie-facade.git
+cd tolerie-facade
+pip install -r requirements.txt
+# déposer le fichier maison aide_pour_dessinateur.xlsx dans data/ (non versionné)
+python -m app.serveur
+# puis ouvrir http://127.0.0.1:5000
+```
+
+Sans l'Excel dans `data/`, l'appli utilise la table figée `data/table_pliage.json`.
 
 ## ⚠️ Sécurité / confidentialité
 
@@ -32,6 +46,6 @@ Ces fichiers sont exclus par `.gitignore`. Le dépôt doit rester **privé**.
 - [x] 1. Moteur de pliage (lecture table + déduction + dépliage) — testé
 - [x] 3. Générateur DXF (contour + plis + trous + découpes) — testé
 - [x] 4. Générateur STEP (extrusion du profil plié, rayons de pli) — testé
+- [x] 5. Application web locale (formulaire, aperçus, génération) — testé
 - [~] 2. Lecture PDF (cartouche OK ; géométrie de coupe + perçages à faire)
-- [ ] 5. Application à formulaire (glisser PDF → vérifier → générer)
 - [ ] 6. Pont SolidWorks (optionnel, sur PC Windows)

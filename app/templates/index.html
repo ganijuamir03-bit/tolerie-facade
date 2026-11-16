@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tôlerie Façade — PDF → DXF / STEP</title>
+<style>
+  :root{--bg:#0f141a;--card:#1a222c;--line:#2b3744;--txt:#e7edf3;--mut:#9fb0c0;
+        --acc:#4aa3ff;--ok:#39d98a;--warn:#ffb020;--err:#ff6b6b;}
+  *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--txt);
+    font:15px/1.5 system-ui,Segoe UI,Roboto,sans-serif}
+  header{padding:16px 22px;border-bottom:1px solid var(--line);display:flex;
+    align-items:baseline;gap:12px}
+  header h1{font-size:18px;margin:0} header .sub{color:var(--mut);font-size:13px}
+  .wrap{max-width:1150px;margin:0 auto;padding:18px;display:grid;
+    grid-template-columns:1fr 1fr;gap:18px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
+  .card h2{font-size:14px;margin:0 0 12px;color:var(--acc);text-transform:uppercase;
+    letter-spacing:.04em}
+  label{display:block;font-size:12px;color:var(--mut);margin:10px 0 4px}
+  input,select{width:100%;background:#0d1319;border:1px solid var(--line);color:var(--txt);
+    border-radius:8px;padding:9px 10px;font-size:14px}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+  #drop{border:2px dashed var(--line);border-radius:12px;padding:22px;text-align:center;
+    color:var(--mut);cursor:pointer;transition:.15s}
+  #drop.hover{border-color:var(--acc);color:var(--txt);background:#12202e}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .chip{background:#0d1319;border:1px solid var(--line);border-radius:6px;padding:3px 8px;
+    font-size:13px}
+  .deplie{margin-top:12px;padding:12px;border-radius:10px;background:#0d1319;
+    border:1px solid var(--line)}
+  .deplie .big{font-size:26px;font-weight:600;color:var(--ok)}
+  .deplie .meta{color:var(--mut);font-size:13px}
+  table{width:100%;border-collapse:collapse;margin-top:8px;font-size:13px}
+  th,td{border:1px solid var(--line);padding:5px 6px;text-align:left}
+  th{color:var(--mut);font-weight:500}
+  td input,td select{padding:5px 6px}
+  .btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  button{background:#22303d;border:1px solid var(--line);color:var(--txt);border-radius:8px;
+    padding:9px 14px;cursor:pointer;font-size:14px}
+  button:hover{border-color:var(--acc)} button.primary{background:var(--acc);color:#04121f;
+    border-color:var(--acc);font-weight:600} button.mini{padding:4px 9px;font-size:13px}
+  .opt{display:flex;gap:18px;align-items:center;margin:6px 0 2px}
+  .opt label{display:flex;align-items:center;gap:7px;margin:0;color:var(--txt);font-size:14px}
+  .opt input{width:auto}
+  .full{grid-column:1 / -1}
+  .results{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:10px}
+  .results img{width:100%;border-radius:10px;border:1px solid var(--line);background:#fff}
+  .msg{padding:10px 12px;border-radius:8px;margin-top:8px;font-size:13px}
+  .msg.err{background:#3a1b1b;border:1px solid var(--err);color:#ffd3d3}
+  .msg.warn{background:#3a2f16;border:1px solid var(--warn);color:#ffe6b0}
+  .dl{display:inline-block;margin:4px 8px 0 0;background:var(--ok);color:#04121f;
+    padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:600}
+  small.hint{color:var(--mut)}
+</style>
+</head>
+<body>
+<header>
+  <h1>Tôlerie Façade</h1>
+  <span class="sub">PDF client → DXF de découpe + STEP 3D · pertes au pli selon la table maison</span>
+</header>
+
+<div class="wrap">
+  <!-- Colonne gauche : plan + profil -->
+  <div>
+    <div class="card">
+      <h2>1 · Plan PDF (optionnel)</h2>
+      <div id="drop">Glisse un PDF ici, ou clique pour choisir<br>
+        <small class="hint">Le cartouche (matière, épaisseur, longueur…) sera pré-rempli.</small></div>
+      <input id="file" type="file" accept="application/pdf" hidden>
+      <div id="pdfmsg"></div>
+    </div>
+
+    <div class="card" style="margin-top:18px">
+      <h2>2 · Pièce</h2>
+      <div class="row">
+        <div><label>Désignation</label><input id="titre" placeholder="Couvertine Type E"></div>
+        <div><label>Position</label><input id="position" placeholder="5021"></div>
+      </div>
+      <div class="row3">
+        <div><label>Matière</label><select id="matiere"></select></div>
+        <div><label>Épaisseur</label><select id="epaisseur"></select></div>
+        <div><label>Matrice</label><select id="matrice"></select></div>
+      </div>
+      <div class="row3">
+        <div><label>Longueur pièce (mm)</label><input id="longueur" type="number" placeholder="2000"></div>
+        <div><label>Rayon int. (mm)</label><input id="rayon" type="number" placeholder="= épaisseur"></div>
+        <div><label>Angle plis (°)</label><input id="angle" type="number" value="90"></div>
+      </div>
+      <label>Faces (cotes extérieures, séparées par +)</label>
+      <input id="faces" placeholder="64+35+80+160+80+40">
+      <div class="chips" id="faceschips"></div>
+      <div class="deplie" id="deplie">
+        <div class="meta">Largeur dépliée</div>
+        <div class="big" id="deplieVal">—</div>
+        <div class="meta" id="deplieMeta"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Colonne droite : features + sortie -->
+  <div>
+    <div class="card">
+      <h2>3 · Perçages / découpes</h2>
+      <div class="btns">
+        <button class="mini" onclick="addFeat('trou')">+ Trou</button>
+        <button class="mini" onclick="addFeat('oblong')">+ Oblong</button>
+        <button class="mini" onclick="addFeat('decoupe')">+ Découpe</button>
+      </div>
+      <table id="feats"><thead><tr>
+        <th>Type</th><th>X</th><th>Y</th><th>Ø / L</th><th>larg.</th><th>angle</th><th></th>
+      </tr></thead><tbody></tbody></table>
+      <small class="hint">X = le long de la pièce · Y = dans la largeur dépliée (mm).</small>
+    </div>
+
+    <div class="card" style="margin-top:18px">
+      <h2>4 · Génération</h2>
+      <div class="opt">
+        <label><input type="checkbox" id="optDxf" checked> DXF de découpe</label>
+        <label><input type="checkbox" id="optStep" checked> STEP 3D</label>
+      </div>
+      <div class="btns">
+        <button class="primary" onclick="generer()">Générer les fichiers</button>
+      </div>
+      <div id="genmsg"></div>
+      <div id="downloads"></div>
+    </div>
+
+    <div class="card full" id="apercuCard" style="margin-top:18px;display:none">
+      <h2>Aperçus</h2>
+      <div class="results">
+        <div><div class="meta" style="color:var(--mut);font-size:12px">Flan DXF</div><img id="imgDxf"></div>
+        <div><div class="meta" style="color:var(--mut);font-size:12px">Pièce STEP</div><img id="imgStep"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let MAT=[];  // données matériaux
+
+async function init(){
+  MAT = await (await fetch('/api/materiaux')).json();
+  const sm=document.getElementById('matiere');
+  sm.innerHTML = MAT.map((m,i)=>`<option value="${i}">${m.matiere}</option>`).join('');
+  sm.onchange = fillEp; fillEp();
+}
+function fillEp(){
+  const m = MAT[+document.getElementById('matiere').value];
+  const se=document.getElementById('epaisseur');
+  se.innerHTML = m.epaisseurs.map((e,i)=>`<option value="${i}">${e.epaisseur} mm</option>`).join('');
+  se.onchange = fillMat; fillMat();
+}
+function fillMat(){
+  const m = MAT[+document.getElementById('matiere').value];
+  const e = m.epaisseurs[+document.getElementById('epaisseur').value];
+  const sx=document.getElementById('matrice');
+  sx.innerHTML = e.matrices.map(x=>`<option value="${x.matrice}">${x.matrice} — déd. ${x.deduction} mm</option>`).join('');
+  sx.value = e.defaut; sx.onchange = calcDeplie; calcDeplie();
+}
+function parseFaces(){
+  const t=document.getElementById('faces').value;
+  const f=(t.match(/\d[\d.,]*/g)||[]).map(x=>parseFloat(x.replace(',','.')));
+  document.getElementById('faceschips').innerHTML =
+    f.map((v,i)=>`<span class="chip">f${i+1} = ${v}</span>`).join('') +
+    (f.length>1?`<span class="chip" style="color:var(--mut)">${f.length-1} plis</span>`:'');
+  return f;
+}
+function curParams(){
+  const m = MAT[+document.getElementById('matiere').value];
+  const faces = parseFaces();
+  const ang = parseFloat(document.getElementById('angle').value)||90;
+  return {
+    titre:document.getElementById('titre').value,
+    position:document.getElementById('position').value,
+    matiere:m.matiere,
+    epaisseur:m.epaisseurs[+document.getElementById('epaisseur').value].epaisseur,
+    matrice:document.getElementById('matrice').value,
+    longueur:parseFloat(document.getElementById('longueur').value)||null,
+    rayon_interieur:parseFloat(document.getElementById('rayon').value)||null,
+    faces:faces,
+    plis: faces.length>1 ? Array(faces.length-1).fill({angle:ang,sens:'V'}) : [],
+    features: collectFeats(),
+  };
+}
+let deplieTimer;
+async function calcDeplie(){
+  clearTimeout(deplieTimer);
+  deplieTimer=setTimeout(async()=>{
+    const p=curParams();
+    if(p.faces.length<1){document.getElementById('deplieVal').textContent='—';return;}
+    const r=await (await fetch('/api/deplie',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(p)})).json();
+    if(r.ok){
+      const d=r.deplie;
+      document.getElementById('deplieVal').textContent = d.largeur_deplie+' mm';
+      document.getElementById('deplieMeta').textContent =
+        `Σ faces ${d.somme_faces} − ${d.nb_plis}×${d.deduction_unitaire} (matrice ${d.matrice})`;
+    }else{
+      document.getElementById('deplieVal').textContent='—';
+      document.getElementById('deplieMeta').textContent=r.erreur||'';
+    }
+  },250);
+}
+
+// --- features ---
+function addFeat(type){
+  const tb=document.querySelector('#feats tbody');
+  const tr=document.createElement('tr');
+  tr.dataset.type=type;
+  const d = type==='trou'   ? ['','','Ø','','']
+          : type==='oblong' ? ['','','L','larg','ang']
+          :                   ['','','larg','haut',''];
+  tr.innerHTML =
+    `<td>${type}</td>`+
+    `<td><input class="x" type="number"></td>`+
+    `<td><input class="y" type="number"></td>`+
+    `<td><input class="a" type="number" placeholder="${d[2]}"></td>`+
+    `<td><input class="b" type="number" placeholder="${d[3]}" ${type==='trou'?'disabled':''}></td>`+
+    `<td><input class="c" type="number" placeholder="${d[4]}" ${type==='oblong'?'':'disabled'}></td>`+
+    `<td><button class="mini" onclick="this.closest('tr').remove()">✕</button></td>`;
+  tb.appendChild(tr);
+}
+function collectFeats(){
+  const out=[];
+  document.querySelectorAll('#feats tbody tr').forEach(tr=>{
+    const t=tr.dataset.type, g=s=>parseFloat(tr.querySelector(s).value);
+    if(t==='trou')   out.push({type:'trou',x:g('.x'),y:g('.y'),diametre:g('.a')});
+    if(t==='oblong') out.push({type:'oblong',x:g('.x'),y:g('.y'),longueur:g('.a'),largeur:g('.b'),angle:g('.c')||0});
+    if(t==='decoupe')out.push({type:'decoupe',x:g('.x'),y:g('.y'),largeur:g('.a'),hauteur:g('.b')});
+  });
+  return out.filter(f=>!isNaN(f.x)&&!isNaN(f.y));
+}
+
+// --- PDF ---
+const drop=document.getElementById('drop'), file=document.getElementById('file');
+drop.onclick=()=>file.click();
+['dragover','dragenter'].forEach(e=>drop.addEventListener(e,ev=>{ev.preventDefault();drop.classList.add('hover')}));
+['dragleave','drop'].forEach(e=>drop.addEventListener(e,ev=>{ev.preventDefault();drop.classList.remove('hover')}));
+drop.addEventListener('drop',ev=>{if(ev.dataTransfer.files[0])envoyerPdf(ev.dataTransfer.files[0])});
+file.onchange=()=>{if(file.files[0])envoyerPdf(file.files[0])};
+async function envoyerPdf(f){
+  const msg=document.getElementById('pdfmsg'); msg.innerHTML='<div class="msg">Lecture du PDF…</div>';
+  const fd=new FormData(); fd.append('pdf',f);
+  const r=await (await fetch('/api/analyser',{method:'POST',body:fd})).json();
+  if(r.erreur){msg.innerHTML=`<div class="msg err">${r.erreur}</div>`;return;}
+  if(r.titre)document.getElementById('titre').value=r.titre;
+  if(r.position)document.getElementById('position').value=r.position;
+  if(r.longueur_mm)document.getElementById('longueur').value=r.longueur_mm;
+  // tenter de pré-sélectionner matière/épaisseur
+  if(r.epaisseur) preselect(r.matiere||'', r.epaisseur);
+  msg.innerHTML=`<div class="msg warn">Cartouche lu — <b>vérifie</b> les champs pré-remplis (matière: ${r.matiere||'?'}). Saisis les faces du profil.</div>`;
+  calcDeplie();
+}
+function preselect(matiere, ep){
+  const q=matiere.toLowerCase();
+  const alias=[['inox','Inox'],['alu','Alumin'],['acier','Acier'],['galva','Galva'],['laiton','Laiton'],['cuivre','Cuivre']];
+  let idx=0; for(let i=0;i<MAT.length;i++){for(const[k,v]of alias){if(q.includes(k)&&MAT[i].matiere.includes(v)){idx=i;break;}}}
+  const sm=document.getElementById('matiere'); sm.value=idx; fillEp();
+  const m=MAT[idx]; const ei=m.epaisseurs.findIndex(e=>Math.abs(e.epaisseur-ep)<1e-6);
+  if(ei>=0){document.getElementById('epaisseur').value=ei; fillMat();}
+}
+
+// --- génération ---
+async function generer(){
+  const p=curParams();
+  p.options={dxf:document.getElementById('optDxf').checked, step:document.getElementById('optStep').checked};
+  const gm=document.getElementById('genmsg'); gm.innerHTML='<div class="msg">Génération en cours…</div>';
+  document.getElementById('downloads').innerHTML='';
+  const r=await (await fetch('/api/generer',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(p)})).json();
+  if(!r.ok){gm.innerHTML=`<div class="msg err">${r.erreur}</div>`;return;}
+  let warn=(r.avertissements||[]).map(w=>`<div class="msg warn">${w}</div>`).join('');
+  gm.innerHTML=warn||'<div class="msg" style="background:#143021;border:1px solid var(--ok);color:#bff5d8">Fichiers générés ✔</div>';
+  let dl='';
+  if(r.fichiers.dxf) dl+=`<a class="dl" href="${r.fichiers.dxf}">⬇ DXF</a>`;
+  if(r.fichiers.step)dl+=`<a class="dl" href="${r.fichiers.step}">⬇ STEP</a>`;
+  if(r.infos_step)dl+=`<div class="meta" style="color:var(--mut);margin-top:8px">Masse estimée : ${r.infos_step.masse_estimee_kg??'?'} kg · encombrement ${r.infos_step.bbox_mm?.join(' × ')} mm</div>`;
+  document.getElementById('downloads').innerHTML=dl;
+  const card=document.getElementById('apercuCard');
+  if(r.apercus.dxf||r.apercus.step){card.style.display='block';
+    document.getElementById('imgDxf').src=r.apercus.dxf?r.apercus.dxf+'?t='+Date.now():'';
+    document.getElementById('imgStep').src=r.apercus.step?r.apercus.step+'?t='+Date.now():'';
+  }
+}
+
+['faces','matiere','epaisseur','matrice','longueur','angle'].forEach(id=>{
+  document.getElementById(id).addEventListener('input',calcDeplie);
+});
+init();
+</script>
+</body>
+</html>
